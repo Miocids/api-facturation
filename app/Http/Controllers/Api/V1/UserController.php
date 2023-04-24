@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Services\UserService;
 use App\Http\Requests\{UserRequest, UpdateUserRequest};
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -21,9 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            "users" => User::all()
-        ]);
+        return UserResource::collection(User::all())->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
     /**

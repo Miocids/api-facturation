@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Facture;
 use Illuminate\Http\Request;
 use App\Http\Resources\V1\FactureResource;
+use Illuminate\Http\{Response};
 
 class FactureController extends Controller
 {
@@ -14,7 +15,7 @@ class FactureController extends Controller
      */
     public function index()
     {
-        return FactureResource::collection(Facture::latest()->paginate());
+        return FactureResource::collection(Facture::all())->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
     /**

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
+use App\Http\Resources\V1\ProductResource;
+use Illuminate\Http\{JsonResponse, Response};
 
 class ProductController extends Controller
 {
@@ -20,9 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            "products" => Product::all()
-        ],201);
+        return ProductResource::collection(Product::all())->response()->setStatusCode(Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -47,16 +47,26 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, string $id)
     {
-        //
+        $this->productService->update($id);
+
+        return response()->json([
+            "message" => 'The product ' . Product::find($id)->product . 'was updated succesfully'
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+
+        $product->delete();
+
+        return response()->json([
+            "message" => "The product was deleted successfully"
+        ]);
     }
 }
